@@ -6,6 +6,7 @@ import Tech from '../views/Tech.vue'
 import Experience from '../views/Experience.vue'
 import Profile_Admin from "@/views/Profile_Admin.vue";
 import ExperienceTextEditor from "@/views/ExperienceTextEditor.vue";
+import ExperienceDetail from '@/views/ExperienceDetail.vue'  // ① 추가
 
 Vue.use(Router)
 
@@ -18,6 +19,7 @@ export default new Router({
         { path: '/experience', component: Experience },
         { path: '/admin/portfoilo', component: Profile_Admin },
         { path: '/experience/text-editor', component: ExperienceTextEditor },
+        {path: '/experience/:id', component: ExperienceDetail},
 
 
 

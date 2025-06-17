@@ -1,5 +1,11 @@
 <template>
   <div id="app" class="exprience-body">
+    <div
+        ref="experienceTitle"
+        contenteditable="true"
+        class="exprience-title-box"
+        data-placeholder="여기에 글을 입력하세요…"
+    ></div>
     <TextEditor ref="textEditor"/>
     <div class = "exprience-button-box">
       <button class="exprience-save" @click="saveExperienceContent">저장하기</button>
@@ -18,9 +24,19 @@ export default {
   methods:{
     async saveExperienceContent() {
       try {
+        // 1) 제목 추출
+        const title = this.$refs.experienceTitle.textContent.trim()
+        if (!title) {
+          alert('제목을 입력해주세요.')
+          return
+        }
+
+        // 2) 본문 추출
         const content = this.$refs.textEditor.getContent()
-        console.log('콘텐츠 내용:', content)
-        await axios.post(`${apiUrl}/save/experience`, { content })
+
+        // 3) 서버에 title, content 함께 전송
+        console.log('contents:',title, content)
+        await axios.post(`${apiUrl}/save/experience`, { title, content })
         alert('저장 성공')
         this.$router.push('/experience')
       } catch (err) {
@@ -28,13 +44,34 @@ export default {
         alert('저장 실패')
       }
     }
-
-
   }
 }
 </script>
 
 <style scoped>
+
+.exprience-title-box {
+  display: flex;
+  align-items: center;
+
+  height: 6vh;
+  /* 최소 10px, 뷰포트 너비의 4% 크기, 최대 26px 사이에서 유동적으로 */
+  font-size: clamp(7px, 4vw, 16px);
+
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-left: 5.5vw;
+  margin-right: 5.5vw;
+  margin-top: 5.97vh;
+  box-sizing: border-box;
+  border: 0.8px solid #E5E5E5;
+  color: #505050;
+}
+
+
+
 .exprience-button-box{
   display: flex;
   justify-content: flex-end;
@@ -49,6 +86,7 @@ export default {
   padding-top: 2px;
   padding-bottom: 5px;
   cursor: pointer;
+
 }
 
 .exprience-save:hover {
