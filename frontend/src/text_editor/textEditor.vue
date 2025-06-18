@@ -56,7 +56,7 @@ export default {
 .experience-editor {
   margin-left: 5.5vw;
   margin-right: 5.5vw;
-  margin-top: 2vh;
+
   height: 50%;
 }
 

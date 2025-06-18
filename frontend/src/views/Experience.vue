@@ -14,10 +14,11 @@
             class="item-link"
         >
           <div class="experience-preview">
-          <small class="preview-no" style="color: #F6F6F6"> No. {{ item.id }} </small>
+          <div class="preview-no" style="color: #D9D9D9; padding-bottom: 1.3vh; font-size: 14px"> No. {{ item.id }} </div>
           <div class="preview-header">
 
-          <div class="preview-title" style="color: #505050">{{ item.title }}</div>
+          <div class="preview-title" style="color: #505050; padding-bottom: 0.25vh; font-size: 14px;">{{ item.title }}</div>
+            <div class="preview-english-title" style="color: #505050; font-size: 14px" >{{ item.englishTitle }}</div>
           </div>
           <div class="preview-body">
           <img
@@ -85,14 +86,15 @@ export default {
 }
 
 .experience-preview {
-
 }
 
+
+
 .preview-header{
-  padding-top: 2vh;
-  padding-bottom: 2vh;
-  padding-left: 2vw;
-  padding-right: 2vw;
+  padding-top: 1.7vh;
+  padding-bottom: 1.7vh;
+  padding-left: 1vw;
+  padding-right: 1vw;
   background-color: #F6F6F6;
   border: 1px solid #D9D9D9;
 }
@@ -126,10 +128,15 @@ export default {
 
 /* 이미지: 컬럼 폭 100% */
 .preview-img {
-  width: 100%;
+  width: 93%;
   height: auto;
   display: block;
   object-fit: cover;
+  padding-top: 0.75vh;
+  padding-bottom: 0.75vh;
+  padding-right: 0.75vw;
+  padding-left: 0.75vw;
+
 }
 
 /* 제목/날짜 스타일 */

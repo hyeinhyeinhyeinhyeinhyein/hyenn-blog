@@ -17,11 +17,16 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 /** POST /save/experience */
 exports.experienceSave = async (req, res) => {
-    const { title, content } = req.body;
+    const { title, englishTitle, content } = req.body;
     const client = new MongoClient(uri);
 
-    // 1) 제목 검증
+    // 1) 한글 제목 검증
     if (!title || !title.trim()) {
+        return res.status(400).json({ error: '제목을 입력해주세요.' });
+    }
+
+    // 2) 영어 제목 검증
+    if (!englishTitle || !englishTitle.trim()) {
         return res.status(400).json({ error: '제목을 입력해주세요.' });
     }
 
@@ -31,35 +36,36 @@ exports.experienceSave = async (req, res) => {
         const counters = db.collection('counters');
         const posts    = db.collection(dbNameText);
 
-        // 2) 시퀀스만 +1 (upsert)
+        // 3) 시퀀스만 +1 (upsert)
         await counters.updateOne(
             { _id: 'postid' },
             { $inc: { sequence_value: 1 } },
             { upsert: true }
         );
 
-        // 3) 증가된 시퀀스를 확실히 조회
+        // 4) 증가된 시퀀스를 확실히 조회
         const seqDoc = await counters.findOne({ _id: 'postid' });
         if (!seqDoc || typeof seqDoc.sequence_value !== 'number') {
             throw new Error('시퀀스 조회에 실패했습니다.');
         }
         const postId = seqDoc.sequence_value;
 
-        // 4) 실제 저장할 문서 준비
+        // 5) 실제 저장할 문서 준비
         const now = new Date();
         const doc = {
             id: postId,
             title,
+            englishTitle,
             content,
             created_at: now,
             updated_at: now,
             is_deleted: 0
         };
 
-        // 5) 게시물 삽입
+        // 6) 게시물 삽입
         const result = await posts.insertOne(doc);
 
-        // 6) 응답
+        // 7) 응답
         res.status(200).json({ message: 'saved', postId });
     } catch (e) {
         console.error('experienceSave error:', e);

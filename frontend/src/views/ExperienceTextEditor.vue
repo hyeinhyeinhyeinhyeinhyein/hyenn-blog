@@ -6,6 +6,12 @@
         class="exprience-title-box"
         data-placeholder="여기에 글을 입력하세요…"
     ></div>
+    <div
+        ref="experienceEnglishTitle"
+        contenteditable="true"
+        class="exprience-english-title-box"
+        data-placeholder="여기에 글을 입력하세요…"
+    ></div>
     <TextEditor ref="textEditor"/>
     <div class = "exprience-button-box">
       <button class="exprience-save" @click="saveExperienceContent">저장하기</button>
@@ -24,19 +30,26 @@ export default {
   methods:{
     async saveExperienceContent() {
       try {
-        // 1) 제목 추출
+        // 1) 한글 제목 추출
         const title = this.$refs.experienceTitle.textContent.trim()
         if (!title) {
           alert('제목을 입력해주세요.')
           return
         }
 
-        // 2) 본문 추출
+        // 2) 영어 제목 추출
+        const englishTitle = this.$refs.experienceEnglishTitle.textContent.trim()
+        if (!englishTitle) {
+          alert('제목을 입력해주세요.')
+          return
+        }
+
+        // 3) 본문 추출
         const content = this.$refs.textEditor.getContent()
 
-        // 3) 서버에 title, content 함께 전송
-        console.log('contents:',title, content)
-        await axios.post(`${apiUrl}/save/experience`, { title, content })
+        // 4) 서버에 title, content 함께 전송
+        console.log('contents:',title,englishTitle, content)
+        await axios.post(`${apiUrl}/save/experience`, { title, englishTitle, content })
         alert('저장 성공')
         this.$router.push('/experience')
       } catch (err) {
@@ -70,6 +83,26 @@ export default {
   color: #505050;
 }
 
+.exprience-english-title-box {
+  display: flex;
+  align-items: center;
+
+  height: 6vh;
+  /* 최소 10px, 뷰포트 너비의 4% 크기, 최대 26px 사이에서 유동적으로 */
+  font-size: clamp(7px, 4vw, 16px);
+
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-left: 5.5vw;
+  margin-right: 5.5vw;
+  margin-top: 1.5vh;
+  margin-bottom: 1.5vh;
+  box-sizing: border-box;
+  border: 0.8px solid #E5E5E5;
+  color: #505050;
+}
 
 
 .exprience-button-box{
