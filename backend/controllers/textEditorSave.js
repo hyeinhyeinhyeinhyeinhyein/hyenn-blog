@@ -2,6 +2,7 @@ require('dotenv').config();
 const { MongoClient } = require('mongodb');
 const uri = process.env.MONGO_URI;
 const dbNameText = 'ExperienceContents';
+const sharp = require('sharp');
 
 const AWS = require('aws-sdk');
 AWS.config.update({
@@ -69,9 +70,7 @@ exports.experienceSave = async (req, res) => {
 };
 
 
-/**
- * GET /save/experience
- */
+
 /** GET /list/experience */
 exports.experienceList = async (req, res) => {
     const client = new MongoClient(uri);
@@ -140,12 +139,20 @@ exports.uploadExperienceImage = [
         const key = `experience-images/${Date.now()}-${originalname}`;
 
         try {
+            // 1) 가로 700px, 세로는 비율 유지
+            const resizedBuffer = await sharp(buffer)
+                .resize({ width: 700 })
+                .toBuffer();
+
+            // 2) S3에 업로드
+            const key = `experience-images/${Date.now()}-${originalname}`;
             await s3.putObject({
                 Bucket: process.env.S3_BUCKET,
                 Key: key,
-                Body: buffer,
+                Body: resizedBuffer,             // 원본 buffer 대신 리사이즈된 버퍼 사용
                 ContentType: mimetype
             }).promise();
+
 
             const url = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`;
             res.json({ url, key });
