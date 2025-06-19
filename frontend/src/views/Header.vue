@@ -14,7 +14,9 @@
       <div>|</div>
       <div><router-link to="/experience">Experience</router-link></div>
 
-
+      <div class="write-link" v-if="isLoggedIn && $route.path === '/experience'">
+        <router-link to="/experience/text-editor">글쓰기</router-link>
+      </div>
 
      <router-link v-if="isAdmin" to="/admin/profile">Admin_Profile</router-link>
       <router-link v-if="isAdmin" to="/admin/portfoilo">Admin_Portfolio</router-link>

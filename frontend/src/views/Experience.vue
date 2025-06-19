@@ -34,9 +34,11 @@
       </li>
     </ul>
 
+    <!--
     <div class="write-link">
       <router-link to="/experience/text-editor">글쓰기</router-link>
     </div>
+    -->
   </div>
 </template>
 
