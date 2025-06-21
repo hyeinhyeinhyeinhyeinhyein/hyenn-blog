@@ -14,8 +14,9 @@
     </div>
       <div class="back-to-experience-list">
         <router-link to="/experience">메뉴로 돌아가기 </router-link>
-
     </div>
+      <div class="delete-experience" @click="deleteExperience"> 삭제하기 </div>
+
 
     </div>
   </div>
@@ -24,16 +25,28 @@
 <script>
 import axios from 'axios'
 import { Viewer } from '@toast-ui/vue-editor'
-
+const apiUrl = process.env.VUE_APP_API_URL
 export default {
   components: { Viewer },
   data() {
     return { post: null }
   },
+  methods:{
+    async deleteExperience(){
+      try{
+        const postId=this.post.id
+        await axios.post(`${apiUrl}/save/experience-delete`, { postId })
+        this.$router.push('/experience')
+      }catch(err){
+        console.error('삭제 실패:', err.response?.data || err.message)
+        alert('삭제 실패')
+      }
+    }
+  },
   async mounted() {
     const id = this.$route.params.id
     try {
-      const res = await axios.get(`/save/experience/${id}`)
+      const res = await axios.get(`${apiUrl}/save/experience/${id}`)
       this.post = res.data.item
     } catch (e) {
       console.error('상세 조회 실패', e)
@@ -93,5 +106,21 @@ export default {
   color: inherit;           /* 부모 요소의 색상 상속 */
 }
 
+.delete-experience{
+  margin-right: 5.5vw;
+  text-align: center;
+  width: 7.5vw;
+  height: 5vh;
+  border: 1px solid #D9D9D9;
+  background-color: #F6F6F6;
+  color: #505050;
+  display: flex;
+  align-items: center;      /* 세로 가운데 정렬 */
+  justify-content: center;  /* 가로 가운데 정렬 */
+}
 
+.delete-experience a {
+  text-decoration: none;    /* 밑줄 제거 */
+  color: inherit;           /* 부모 요소의 색상 상속 */
+}
 </style>

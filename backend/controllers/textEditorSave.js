@@ -190,3 +190,28 @@ exports.getExperienceImage = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+exports.deleteExperience = async (req,res) => {
+    const client = new MongoClient(uri);
+    const postId = parseInt(req.body.postId, 10);
+    try{
+        await client.connect();
+        const db = client.db(dbNameText);
+        const posts    = db.collection(dbNameText);
+        const result = await posts.updateOne(
+            { id: postId },            // 숫자 id로 조회
+            { $set: { is_deleted: 1 } }   // 1로 변경해 soft delete
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).json({ message: '해당 게시글을 찾을 수 없습니다.' });
+        }
+
+        res.json({ message: '삭제 처리 완료', modifiedCount: result.modifiedCount });
+    }catch(err){
+        console.error('삭제 중 오류 발생:', err);
+        res.status(500).json({ message: '서버 오류', error: err.message });
+    }finally {
+        await client.close();
+    }
+};
