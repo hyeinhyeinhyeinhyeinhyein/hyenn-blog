@@ -15,7 +15,7 @@
       <div class="back-to-experience-list">
         <router-link to="/experience">메뉴로 돌아가기 </router-link>
     </div>
-      <div class="delete-experience" @click="deleteExperience"> 삭제하기 </div>
+      <div class="delete-experience" @click="deleteExperience" v-if="isLoggedIn"> 삭제하기 </div>
 
 
     </div>
@@ -25,17 +25,24 @@
 <script>
 import axios from 'axios'
 import { Viewer } from '@toast-ui/vue-editor'
+import {loginCheck} from "@/utils/auth";
+
+
 const apiUrl = process.env.VUE_APP_API_URL
 export default {
   components: { Viewer },
   data() {
-    return { post: null }
+    return {
+      post: null,
+      isLoggedIn: false,
+      isAdmin: false
+    }
   },
-  methods:{
+  methods: {
     async deleteExperience(){
       try{
         const postId=this.post.id
-        await axios.post(`${apiUrl}/save/experience-delete`, { postId })
+        await axios.post(`${apiUrl}/save/experience-delete`, { postId }, { withCredentials: true })
         this.$router.push('/experience')
       }catch(err){
         console.error('삭제 실패:', err.response?.data || err.message)
@@ -44,6 +51,9 @@ export default {
     }
   },
   async mounted() {
+    const { isLoggedIn, isAdmin } = await loginCheck()
+    this.isLoggedIn = isLoggedIn
+    this.isAdmin = isAdmin
     const id = this.$route.params.id
     try {
       const res = await axios.get(`${apiUrl}/save/experience/${id}`)
