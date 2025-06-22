@@ -9,7 +9,7 @@ const apiUrl = process.env.VUE_APP_API_URL
  */
 export async function loginCheck() {
     try {
-        const res = await axios.get(`${apiUrl}/kakao/logincheck`, {
+        const res = await axios.get(`${apiUrl}/kakao/status`, {
             withCredentials: true // 쿠키 자동 전송
         })
         return {

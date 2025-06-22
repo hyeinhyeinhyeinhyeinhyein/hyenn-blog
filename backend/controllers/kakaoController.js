@@ -38,7 +38,8 @@ exports.kakaoCallback = async (req, res) => {
                 JWT_SECRET, //토큰이 위조되지 않도록 서명(Signature)하는 데 쓰는 비밀 키 -> .env 파일에 숨겨서 보관(공개되면 안됨)
                 {expiresIn: '1h'}
             );
-            console.log(loginToken);
+            //console.log(loginToken);
+
             // 5. JWT를 HTTP-only 쿠키로 설정
             res.cookie('login_token', loginToken, {
                 httpOnly: true,
@@ -46,6 +47,7 @@ exports.kakaoCallback = async (req, res) => {
                 sameSite: 'Lax',
                 maxAge: 60 * 60 * 1000
            });
+
             // 6. 리다이렉트 (쿼리스트링 없이)
             return res.redirect(`http://localhost:8081`);
         } else {
@@ -53,13 +55,12 @@ exports.kakaoCallback = async (req, res) => {
         }
 
     } catch (err) {
-        console.error(err);
+        console.error(err);d
         res.status(500).send('서버 오류');
     }
 };
 
 exports.loginStatus = (req,res) => {
-    console.log('loginStatus 백엔드 함수가 실행되고 있습니다!');
     const token = req.cookies.login_token;
     if (!token) return res.status(401).json({isLoggedIn: false});
 

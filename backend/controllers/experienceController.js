@@ -22,7 +22,7 @@ const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
 /** POST /save/experience */
-exports.experienceSave = async (req, res) => {
+exports.createExperience = async (req, res) => {
     const { title, englishTitle, content } = req.body;
     const client = new MongoClient(uri);
 
@@ -84,7 +84,7 @@ exports.experienceSave = async (req, res) => {
 
 
 /** GET /list/experience */
-exports.experienceList = async (req, res) => {
+exports.listExperience = async (req, res) => {
     const client = new MongoClient(uri);
 
     try {
@@ -113,10 +113,9 @@ exports.experienceList = async (req, res) => {
 /**
  * GET /save/experience-detail
  */
-exports.experienceDetail = async (req, res) => {
+exports.getExperienceDetail = async (req, res) => {
     const client = new MongoClient(uri)
-    const id = parseInt(req.params.id, 10)
-
+    const id = parseInt(req.params.expId, 10)
     try {
         await client.connect()
         const db = client.db(dbNameText)
@@ -179,7 +178,7 @@ exports.uploadExperienceImage = [
  * GET /save/experience-image/:id
  */
 exports.getExperienceImage = async (req, res) => {
-    const key = req.params.id;
+    const key = req.params.expId;
     try {
         const data = await s3.getObject({
             Bucket: process.env.S3_BUCKET,
@@ -200,7 +199,6 @@ exports.getExperienceImage = async (req, res) => {
 exports.deleteExperience = async (req, res) => {
     // 1) JWT 토큰 꺼내기
     const token = req.cookies.login_token
-    console.log("token: ",token)
     if (!token) {
         return res.status(401).json({ message: '로그인이 필요합니다.' })
     }
@@ -220,7 +218,7 @@ exports.deleteExperience = async (req, res) => {
 
     // 4) delete 로직
     const client = new MongoClient(uri)
-    const postId = parseInt(req.body.postId, 10)
+    const expId = parseInt(req.params.expId, 10)
 
     try {
         await client.connect()
@@ -229,7 +227,7 @@ exports.deleteExperience = async (req, res) => {
 
 
         const result = await posts.updateOne(
-            { id: postId },            // 숫자 id로 조회
+            { id: expId },            // 숫자 id로 조회
             { $set: { is_deleted: 1 } } // 1로 변경해 soft delete
         )
 

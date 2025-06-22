@@ -33,17 +33,13 @@
 
       </li>
     </ul>
-
-    <!--
-    <div class="write-link">
-      <router-link to="/experience/text-editor">글쓰기</router-link>
-    </div>
-    -->
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+const apiUrl = process.env.VUE_APP_API_URL
+
 
 export default {
   name: 'ExperienceList',
@@ -55,7 +51,7 @@ export default {
   async mounted() {
     // mounted 훅에서 미리 게시글 조회
     try {
-      const res = await axios.get('/save/experience');
+      const res = await axios.get(`${apiUrl}/experience`);
       this.items = res.data.items.map(item => ({
         ...item,
         preview: this.extractFirstImage(item.content)

@@ -3,7 +3,7 @@ const router = express.Router();
 const { kakaoCallback,loginStatus ,kakaoLogout } = require('../controllers/kakaoController');
 
 router.get('/callback', kakaoCallback);
-router.get('/logincheck', loginStatus);
+router.get('/status', loginStatus);
 router.post('/logout', kakaoLogout);
 
 

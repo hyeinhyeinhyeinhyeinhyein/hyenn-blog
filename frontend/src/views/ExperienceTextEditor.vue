@@ -49,7 +49,7 @@ export default {
 
         // 4) 서버에 title, content 함께 전송
         console.log('contents:',title,englishTitle, content)
-        await axios.post(`${apiUrl}/save/experience`, { title, englishTitle, content })
+        await axios.post(`${apiUrl}/experience`, { title, englishTitle, content })
         alert('저장 성공')
         this.$router.push('/experience')
       } catch (err) {

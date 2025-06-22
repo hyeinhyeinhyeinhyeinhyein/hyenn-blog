@@ -41,8 +41,9 @@ export default {
   methods: {
     async deleteExperience(){
       try{
-        const postId=this.post.id
-        await axios.post(`${apiUrl}/save/experience-delete`, { postId }, { withCredentials: true })
+        const expId = this.$route.params.expId
+        //await axios.post(`${apiUrl}/experience/delete/${expId}`, { expId }, { withCredentials: true })
+        await axios.post(`${apiUrl}/experience/delete/${expId}`, {}, { withCredentials: true })
         this.$router.push('/experience')
       }catch(err){
         console.error('삭제 실패:', err.response?.data || err.message)
@@ -54,9 +55,9 @@ export default {
     const { isLoggedIn, isAdmin } = await loginCheck()
     this.isLoggedIn = isLoggedIn
     this.isAdmin = isAdmin
-    const id = this.$route.params.id
+    const expId = this.$route.params.expId
     try {
-      const res = await axios.get(`${apiUrl}/save/experience/${id}`)
+      const res = await axios.get(`${apiUrl}/experience/${expId}`)
       this.post = res.data.item
     } catch (e) {
       console.error('상세 조회 실패', e)
